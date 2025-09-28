@@ -13,7 +13,6 @@ public class App {
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
 		GamePanel gp = new GamePanel();
 		
 		window.add(gp);
