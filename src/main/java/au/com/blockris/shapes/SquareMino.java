@@ -2,12 +2,12 @@ package au.com.blockris.shapes;
 
 import java.awt.Color;
 
-import au.com.blockris.commons.DirectionEnum;
+import au.com.blockris.KeyHandler;
 
 public class SquareMino extends Mino {
 	
-	public SquareMino() {
-		super(Color.YELLOW);
+	public SquareMino(KeyHandler kh) {
+		super(Color.YELLOW, kh);
 	}
 	
 	@Override

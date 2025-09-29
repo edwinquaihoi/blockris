@@ -2,12 +2,12 @@ package au.com.blockris.shapes;
 
 import java.awt.Color;
 
-import au.com.blockris.commons.DirectionEnum;
+import au.com.blockris.KeyHandler;
 
 public class Z1Mino extends Mino {
 	
-	public Z1Mino() {
-		super(Color.PINK);
+	public Z1Mino(KeyHandler kh) {
+		super(Color.PINK, kh);
 	}
 	
 	@Override

@@ -2,12 +2,12 @@ package au.com.blockris.shapes;
 
 import java.awt.Color;
 
-import au.com.blockris.commons.DirectionEnum;
+import au.com.blockris.KeyHandler;
 
 public class BarMino extends Mino {
 	
-	public BarMino() {
-		super(Color.BLUE);
+	public BarMino(KeyHandler kh) {
+		super(Color.BLUE, kh);
 	}
 	
 	@Override

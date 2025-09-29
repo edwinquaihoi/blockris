@@ -31,8 +31,10 @@ public class PlayManager {
 	
 	private Stroke areaStroke = new BasicStroke(4f);
 	private Font defaultFont = new Font("Arial",Font.PLAIN, 30);
+	private KeyHandler kh;
 	
-	public PlayManager() {
+	public PlayManager(KeyHandler kh) {
+		this.kh = kh;
 		leftX = (Constants.WIDTH/2) - (WIDTH/2);
 		rightX = leftX + WIDTH;
 		topY = 50;
@@ -41,7 +43,7 @@ public class PlayManager {
 		MINO_START_X = leftX + (WIDTH/2) - Block.SIZE;
 		MINO_START_Y = topY + Block.SIZE;
 		
-		currMino = new Z2Mino();
+		currMino = new Z2Mino(kh);
 		currMino.setXY(MINO_START_X, MINO_START_Y);
 	}
 	
@@ -51,7 +53,7 @@ public class PlayManager {
 	
 	public void paint(Graphics2D g2) {
 		
-		System.out.println("PlayManager:paint");
+		//System.out.println("PlayManager:paint");
 		
 		drawPlayArea(g2);
 		drawNextShapeArea(g2);

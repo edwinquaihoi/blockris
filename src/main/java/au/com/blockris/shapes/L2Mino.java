@@ -2,12 +2,12 @@ package au.com.blockris.shapes;
 
 import java.awt.Color;
 
-import au.com.blockris.commons.DirectionEnum;
+import au.com.blockris.KeyHandler;
 
 public class L2Mino extends Mino {
 	
-	public L2Mino() {
-		super(Color.GREEN);
+	public L2Mino(KeyHandler kh) {
+		super(Color.GREEN,kh);
 	}
 	
 	@Override
