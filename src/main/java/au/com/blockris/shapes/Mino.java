@@ -2,6 +2,7 @@ package au.com.blockris.shapes;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Arrays;
 
 import au.com.blockris.Constants;
 import au.com.blockris.KeyHandler;
@@ -35,6 +36,14 @@ public abstract class Mino implements INode {
 		}
 	}
 	
+	private boolean hasCollidedWithLeft() {
+		return Arrays.asList(blocks).stream().anyMatch(b -> b.x == Constants.PA_LEFT_X);
+	}
+	
+	private boolean hasCollidedWithRight() {
+		return Arrays.asList(blocks).stream().anyMatch(b -> (b.x + Constants.BLOCK_SIZE) == Constants.PA_RIGHT_X);
+	}
+	
 	public void moveDown() {
 		for(Block b : blocks) {
 			b.y += Block.SIZE;
@@ -45,15 +54,23 @@ public abstract class Mino implements INode {
 	}
 	
 	public void moveLeft() {
-		for(Block b : blocks) {
-			b.x -= Block.SIZE;
+		
+		// check left collision
+		
+		if(!hasCollidedWithLeft()) {		
+			for(Block b : blocks) {
+				b.x -= Block.SIZE;
+			}
 		}
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
 	public void moveRight() {
-		for(Block b : blocks) {
-			b.x += Block.SIZE;
+		
+		if(!hasCollidedWithRight()) {
+			for(Block b : blocks) {
+				b.x += Block.SIZE;
+			}
 		}
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
