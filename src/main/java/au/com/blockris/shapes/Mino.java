@@ -23,8 +23,6 @@ public abstract class Mino implements INode {
 	protected KeyHandler kh;
 	
 	public abstract void setXY(int x, int y);
-	public void updateXY(DirectionEnum direction) {};
-
 
 	public Mino(Color color, KeyHandler keyHandler) {
 		this.kh = keyHandler;
@@ -61,8 +59,45 @@ public abstract class Mino implements INode {
 	}
 	
 	public void moveUp() {
+		rotate();
 		kh.setDirectionPressed(DirectionEnum.NONE);
-	}	
+	}
+	
+	private void copyCoordinates(Block[] source, Block[] target) {
+		for(int i=0; i< source.length;i++) {
+			target[i].x = source[i].x;
+			target[i].y = source[i].y;
+		}
+	}
+	
+	public void updateCoordinates() {
+		copyCoordinates(tempBlocks, blocks);
+	};
+	
+
+	public void rotate() {
+		
+		// store current position into temp
+		copyCoordinates(blocks, tempBlocks);
+		
+		// index 0 is always the center point we will use for rotation
+		var px = tempBlocks[0].x;
+		var py = tempBlocks[0].y;
+		
+		for(int i=1;i < tempBlocks.length;i++) {
+			/*
+			 * Clockwise rotation: The new coordinates (x2, y2) can be found using the formula: 
+			 * x2 = px - (y1 - py) and y2 = py + (x1 - px)
+			 */
+			var x2 = px - (tempBlocks[i].y - py);
+			var y2 = py + (tempBlocks[i].x - px);
+			
+			tempBlocks[i].x = x2;
+			tempBlocks[i].y = y2;
+		}
+		
+		updateCoordinates();
+	}
 
 	@Override
 	public void update() {
