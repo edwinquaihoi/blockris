@@ -6,16 +6,12 @@ import au.com.blockris.commons.DeltaGameLoopPanel;
 import lombok.Getter;
 
 public class GamePanel extends DeltaGameLoopPanel {
-
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
-	public static final int FPS = 60;
 	
 	@Getter
 	private PlayManager playManager = new PlayManager();
 	
 	public GamePanel() {
-		super(WIDTH, HEIGHT, FPS);
+		super(Constants.WIDTH, Constants.HEIGHT, Constants.FPS);
 	}
 	
 	@Override
