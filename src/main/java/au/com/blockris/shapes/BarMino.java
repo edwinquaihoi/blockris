@@ -14,10 +14,18 @@ public class BarMino extends Mino {
 	public void setXY(int x, int y) {
 		// o o o o
 		
-		for(int i = 0;i < blocks.length; i++) {
-			blocks[i].x = x + (i*Block.SIZE);
-			blocks[i].y = y;
-		}
+		blocks[0].x = x;
+		blocks[0].y = y;
+		
+		blocks[1].x = x - (Block.SIZE*2);
+		blocks[1].y = y;
+
+		blocks[2].x = x - Block.SIZE;
+		blocks[2].y = y;
+
+		blocks[3].x = x + Block.SIZE;
+		blocks[3].y = y;
+
 	}
 
 }
