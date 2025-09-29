@@ -10,7 +10,7 @@ import java.awt.Stroke;
 
 import au.com.blockris.shapes.Block;
 import au.com.blockris.shapes.Mino;
-import au.com.blockris.shapes.Z2Mino;
+import au.com.blockris.shapes.SMino;
 
 public class PlayManager {
 
@@ -43,7 +43,7 @@ public class PlayManager {
 		MINO_START_X = leftX + (WIDTH/2) - Block.SIZE;
 		MINO_START_Y = topY + Block.SIZE;
 		
-		currMino = new Z2Mino(kh);
+		currMino = new SMino(kh);
 		currMino.setXY(MINO_START_X, MINO_START_Y);
 	}
 	

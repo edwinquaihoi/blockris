@@ -4,9 +4,9 @@ import java.awt.Color;
 
 import au.com.blockris.KeyHandler;
 
-public class Z1Mino extends Mino {
+public class ZMino extends Mino {
 	
-	public Z1Mino(KeyHandler kh) {
+	public ZMino(KeyHandler kh) {
 		super(Color.PINK, kh);
 	}
 	

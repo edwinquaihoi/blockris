@@ -4,25 +4,24 @@ import java.awt.Color;
 
 import au.com.blockris.KeyHandler;
 
-public class L2Mino extends Mino {
+public class SMino extends Mino {
 	
-	public L2Mino(KeyHandler kh) {
-		super(Color.GREEN,kh);
+	public SMino(KeyHandler kh) {
+		super(Color.PINK,kh);
 	}
 	
 	@Override
 	public void setXY(int x, int y) {
-		//   o
-		//   o
-		// o o
+		//   o o
+		// o o 
 		
 		blocks[0].x = x;
 		blocks[0].y = y;
 		
 		Block ref = blocks[0];
 		
-		blocks[1].x = ref.x;
-		blocks[1].y	= ref.y - Block.SIZE;	
+		blocks[1].x = ref.x + Block.SIZE;
+		blocks[1].y	= ref.y;	
 		blocks[2].x = ref.x;
 		blocks[2].y = ref.y + Block.SIZE;
 		blocks[3].x = ref.x - Block.SIZE;
