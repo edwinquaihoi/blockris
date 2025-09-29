@@ -8,6 +8,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 
+import au.com.blockris.shapes.Block;
+import au.com.blockris.shapes.Mino;
+import au.com.blockris.shapes.Z2Mino;
+
 public class PlayManager {
 
 	final int WIDTH = 360;
@@ -21,25 +25,38 @@ public class PlayManager {
 	public static int topY;
 	public static int bottomY;
 
+	private Mino currMino;
+	final int MINO_START_X;
+	final int MINO_START_Y;
+	
 	private Stroke areaStroke = new BasicStroke(4f);
 	private Font defaultFont = new Font("Arial",Font.PLAIN, 30);
 	
 	public PlayManager() {
-		leftX = (GamePanel.WIDTH/2) - (WIDTH/2);
+		leftX = (Constants.WIDTH/2) - (WIDTH/2);
 		rightX = leftX + WIDTH;
 		topY = 50;
 		bottomY = topY + HEIGHT;
+		
+		MINO_START_X = leftX + (WIDTH/2) - Block.SIZE;
+		MINO_START_Y = topY + Block.SIZE;
+		
+		currMino = new Z2Mino();
+		currMino.setXY(MINO_START_X, MINO_START_Y);
 	}
 	
 	public void update() {
-		
+		currMino.update();
 	}
 	
 	public void paint(Graphics2D g2) {
 		drawPlayArea(g2);
 		drawNextShapeArea(g2);
+		
+		if(currMino != null) {
+			currMino.paint(g2);
+		}
 	}
-	
 	
 	private void drawNextShapeArea(Graphics2D g2) {
 		g2.setColor(Color.WHITE);
