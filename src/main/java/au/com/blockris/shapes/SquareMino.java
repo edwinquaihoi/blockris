@@ -28,5 +28,6 @@ public class SquareMino extends Mino {
 		blocks[3].y = ref.y + Block.SIZE;
 	}
 
-
+	@Override
+	public void rotate() {}
 }

@@ -85,12 +85,7 @@ public abstract class Mino implements INode {
 			target[i].x = source[i].x;
 			target[i].y = source[i].y;
 		}
-	}
-	
-	public void updateCoordinates() {
-		copyCoordinates(tempBlocks, blocks);
-	};
-	
+	}	
 
 	public void rotate() {
 		
@@ -113,8 +108,22 @@ public abstract class Mino implements INode {
 			tempBlocks[i].y = y2;
 		}
 		
-		updateCoordinates();
+		// only update if no collision
+		if(!hasRotationCollided(tempBlocks)) {
+			copyCoordinates(tempBlocks, blocks);
+		}
 	}
+	
+	private boolean hasRotationCollided(Block[] source) {
+		return Arrays.asList(source).stream().anyMatch(b -> {
+			return (
+				b.x < Constants.PA_LEFT_X ||
+				b.x + Constants.BLOCK_SIZE > Constants.PA_RIGHT_X ||
+				b.y + Constants.BLOCK_SIZE > Constants.PA_BOTTOM_Y
+			);
+		});
+	}
+	
 
 	@Override
 	public void update() {
