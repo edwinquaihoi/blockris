@@ -26,4 +26,8 @@ public class Block extends Rectangle implements INode {
 		g.fillRect(x, y, SIZE, SIZE);
 	}
 	
+	@Override
+	public void update() {
+	}
+	
 }

@@ -21,6 +21,9 @@ public class GamePanel extends DeltaGameLoopPanel {
 
 	@Override
 	public void paint(Graphics2D g2) {
+		
+		System.out.println("GamePanel:paint");
+		
 		getPlayManager().paint(g2);
 	}
 		

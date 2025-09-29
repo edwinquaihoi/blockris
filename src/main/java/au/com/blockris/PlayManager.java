@@ -50,6 +50,9 @@ public class PlayManager {
 	}
 	
 	public void paint(Graphics2D g2) {
+		
+		System.out.println("PlayManager:paint");
+		
 		drawPlayArea(g2);
 		drawNextShapeArea(g2);
 		

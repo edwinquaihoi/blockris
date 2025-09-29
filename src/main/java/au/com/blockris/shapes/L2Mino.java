@@ -29,16 +29,4 @@ public class L2Mino extends Mino {
 		blocks[3].y = ref.y + Block.SIZE;
 	}
 
-	@Override
-	public void updateXY(DirectionEnum direction) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
