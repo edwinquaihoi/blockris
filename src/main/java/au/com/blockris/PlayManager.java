@@ -7,44 +7,53 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.util.Random;
 
-import au.com.blockris.shapes.Block;
+import au.com.blockris.shapes.BarMino;
+import au.com.blockris.shapes.JMino;
+import au.com.blockris.shapes.LMino;
 import au.com.blockris.shapes.Mino;
 import au.com.blockris.shapes.SMino;
+import au.com.blockris.shapes.SquareMino;
+import au.com.blockris.shapes.TMino;
+import au.com.blockris.shapes.ZMino;
 
 public class PlayManager {
 
-	final int WIDTH = 360;
-	final int HEIGHT = 600;
 	final int BORDER_WIDTH = 4;
 	final int DOUBLE_BORDER_WIDTH = BORDER_WIDTH*2;
 	final String NEXT_LBL = "NEXT";
-	
-	public static int leftX;
-	public static int rightX;
-	public static int topY;
-	public static int bottomY;
 
 	private Mino currMino;
-	final int MINO_START_X;
-	final int MINO_START_Y;
-	
+
 	private Stroke areaStroke = new BasicStroke(4f);
 	private Font defaultFont = new Font("Arial",Font.PLAIN, 30);
 	private KeyHandler kh;
+	private Random rand = new Random();
 	
 	public PlayManager(KeyHandler kh) {
 		this.kh = kh;
-		leftX = (Constants.WIDTH/2) - (WIDTH/2);
-		rightX = leftX + WIDTH;
-		topY = 50;
-		bottomY = topY + HEIGHT;
+				
+		currMino = randomMino();
+		currMino.setXY(Constants.MINO_START_X, Constants.MINO_START_Y);
+	}
+	
+	Mino randomMino() {
 		
-		MINO_START_X = leftX + (WIDTH/2) - Block.SIZE;
-		MINO_START_Y = topY + Block.SIZE;
+		var index = rand.nextInt(7);
 		
-		currMino = new SMino(kh);
-		currMino.setXY(MINO_START_X, MINO_START_Y);
+		var mino = switch(index) {
+			case 0 -> new LMino(kh);
+			case 1 -> new JMino(kh);
+			case 2 -> new BarMino(kh);
+			case 3 -> new ZMino(kh);
+			case 4 -> new SMino(kh);
+			case 5 -> new SquareMino(kh);
+			case 6 -> new TMino(kh);
+			default -> null; // this should not happen
+		};
+		
+		return mino;
 	}
 	
 	public void update() {
@@ -66,8 +75,8 @@ public class PlayManager {
 	private void drawNextShapeArea(Graphics2D g2) {
 		g2.setColor(Color.WHITE);
 		g2.setStroke(areaStroke);
-		int x = rightX + 100;
-		int y = bottomY - 196;
+		int x = Constants.PA_RIGHT_X + 100;
+		int y = Constants.PA_BOTTOM_Y - 196;
 		g2.drawRect(x, y, 200, 200);
 		
 		g2.setFont(defaultFont);
@@ -85,6 +94,6 @@ public class PlayManager {
 	private void drawPlayArea(Graphics2D g2) {
 		g2.setColor(Color.WHITE);
 		g2.setStroke(areaStroke);
-		g2.drawRect(leftX - BORDER_WIDTH, topY - BORDER_WIDTH, WIDTH+DOUBLE_BORDER_WIDTH, HEIGHT+DOUBLE_BORDER_WIDTH);
+		g2.drawRect(Constants.PA_LEFT_X - BORDER_WIDTH, Constants.PA_TOP_Y - BORDER_WIDTH, Constants.PLAY_AREA_WIDTH+DOUBLE_BORDER_WIDTH, Constants.PLAY_AREA_HEIGHT+DOUBLE_BORDER_WIDTH);
 	}
 }
