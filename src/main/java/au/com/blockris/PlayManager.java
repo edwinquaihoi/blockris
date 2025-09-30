@@ -75,6 +75,8 @@ public class PlayManager {
 				staticBlocks.add(blocks[i]);
 			}
 			
+			currMino.setDeactivating(false);
+			
 			currMino = nextMino;
 			currMino.setXY(Constants.MINO_START_X, Constants.MINO_START_Y);
 			nextMino = randomMino();

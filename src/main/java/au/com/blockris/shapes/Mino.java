@@ -26,6 +26,8 @@ public abstract class Mino {
 	protected KeyHandler kh;
 	protected boolean active = true;
 	protected boolean bottomCollision = false;
+	protected boolean deactivating = false;
+	protected int deactivatingCounter = 0;
 	
 	public abstract void setXY(int x, int y);
 
@@ -78,6 +80,7 @@ public abstract class Mino {
 			dropCounter = 0;	
 		} else {
 			bottomCollision = true;
+			deactivating = true;
 		}
 		
 		kh.setDirectionPressed(DirectionEnum.NONE);
@@ -106,7 +109,9 @@ public abstract class Mino {
 	}
 	
 	public void moveUp(List<Block> staticBlocks) {
-		rotate(staticBlocks);
+		if(!deactivating) {
+			rotate(staticBlocks);
+		}
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
@@ -154,10 +159,35 @@ public abstract class Mino {
 		});
 	}
 	
+	public void deactivating(List<Block> staticBlocks) {
+		deactivatingCounter++;
+		
+		if(deactivatingCounter == 45) {
+			deactivatingCounter = 0;
+			
+			if(hasCollided(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y) 
+			|| hasCollidedWithBlocks(staticBlocks, (target, source) ->  ((source.y + Constants.BLOCK_SIZE) == target.y) && (source.x == target.x))) {
+				active = false;
+				bottomCollision = true;
+			}
+
+		}
+	}
 
 	public void update(List<Block> staticBlocks) {
+		
+		if(deactivating) {
+			deactivating(staticBlocks);
+		}
 				
 		if(active) {
+			
+			if(hasCollided(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y) 
+		    || hasCollidedWithBlocks(staticBlocks, (target, source) ->  ((source.y + Constants.BLOCK_SIZE) == target.y) && (source.x == target.x))) {
+				bottomCollision = true;
+				deactivating = true;
+			}
+			
 			switch(kh.getDirectionPressed()) {
 				case DOWN -> moveDown(staticBlocks);
 				case LEFT -> moveLeft(staticBlocks);
@@ -167,22 +197,16 @@ public abstract class Mino {
 			}
 		
 			if(bottomCollision) {
-				active = false;
+				deactivating = true;
 			} else {
 				dropCounter++;
 				if(dropCounter >= Constants.SHAPE_DROP_INTERVAL) {
 					
-					if(hasCollided(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y) 
-						    || hasCollidedWithBlocks(staticBlocks, (target, source) ->  ((source.y + Constants.BLOCK_SIZE) == target.y) && (source.x == target.x))) {
-								bottomCollision = true;
-								active = false;
-					} else {
-						for(Block b : blocks) {
-							b.y += Block.SIZE;
-						}
-											
-						dropCounter = 0;
+					for(Block b : blocks) {
+						b.y += Block.SIZE;
 					}
+										
+					dropCounter = 0;
 				}
 			}
 		}
