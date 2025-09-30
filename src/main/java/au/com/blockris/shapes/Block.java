@@ -22,8 +22,9 @@ public class Block extends Rectangle implements INode {
 
 	@Override
 	public void paint(Graphics2D g) {
+		int margin = 2;
 		g.setColor(color);
-		g.fillRect(x, y, SIZE, SIZE);
+		g.fillRect(x + 2, y + 2, SIZE-(margin*2), SIZE-(margin*2));
 	}
 	
 	@Override

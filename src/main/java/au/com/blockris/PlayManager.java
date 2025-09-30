@@ -7,9 +7,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import au.com.blockris.shapes.BarMino;
+import au.com.blockris.shapes.Block;
 import au.com.blockris.shapes.JMino;
 import au.com.blockris.shapes.LMino;
 import au.com.blockris.shapes.Mino;
@@ -25,17 +28,23 @@ public class PlayManager {
 	final String NEXT_LBL = "NEXT";
 
 	private Mino currMino;
+	private Mino nextMino;
 
 	private Stroke areaStroke = new BasicStroke(4f);
 	private Font defaultFont = new Font("Arial",Font.PLAIN, 30);
 	private KeyHandler kh;
 	private Random rand = new Random();
 	
+	private List<Block> staticBlocks = new ArrayList<Block>();
+	
 	public PlayManager(KeyHandler kh) {
 		this.kh = kh;
 				
 		currMino = randomMino();
 		currMino.setXY(Constants.MINO_START_X, Constants.MINO_START_Y);
+		
+		nextMino = randomMino();
+		nextMino.setXY(Constants.NEXT_MINO_START_X, Constants.NEXT_MINO_START_Y);
 	}
 	
 	Mino randomMino() {
@@ -57,7 +66,20 @@ public class PlayManager {
 	}
 	
 	public void update() {
-		currMino.update();
+		
+		if(currMino.isActive()) {
+			currMino.update(staticBlocks);
+		} else {
+			Block[] blocks = currMino.getBlocks();
+			for(int i=0; i < blocks.length; i++) {
+				staticBlocks.add(blocks[i]);
+			}
+			
+			currMino = nextMino;
+			currMino.setXY(Constants.MINO_START_X, Constants.MINO_START_Y);
+			nextMino = randomMino();
+			nextMino.setXY(Constants.NEXT_MINO_START_X, Constants.NEXT_MINO_START_Y);
+		}
 	}
 	
 	public void paint(Graphics2D g2) {
@@ -69,6 +91,14 @@ public class PlayManager {
 		
 		if(currMino != null) {
 			currMino.paint(g2);
+		}
+		
+		if(nextMino != null) {
+			nextMino.paint(g2);
+		}
+		
+		for(Block b : staticBlocks) {
+			b.paint(g2);
 		}
 	}
 	

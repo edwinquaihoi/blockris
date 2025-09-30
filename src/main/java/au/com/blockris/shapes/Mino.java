@@ -3,17 +3,19 @@ package au.com.blockris.shapes;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import au.com.blockris.Constants;
 import au.com.blockris.KeyHandler;
 import au.com.blockris.commons.DirectionEnum;
-import au.com.blockris.commons.INode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class Mino implements INode {
+public abstract class Mino {
 
 	private static final int MARGIN = 2;
 	
@@ -22,6 +24,8 @@ public abstract class Mino implements INode {
 	protected Color color;
 	protected int dropCounter = 0;
 	protected KeyHandler kh;
+	protected boolean active = true;
+	protected boolean bottomCollision = false;
 	
 	public abstract void setXY(int x, int y);
 
@@ -36,6 +40,7 @@ public abstract class Mino implements INode {
 		}
 	}
 	
+	/*
 	private boolean hasCollidedWithLeft() {
 		return Arrays.asList(blocks).stream().anyMatch(b -> b.x == Constants.PA_LEFT_X);
 	}
@@ -44,30 +49,55 @@ public abstract class Mino implements INode {
 		return Arrays.asList(blocks).stream().anyMatch(b -> (b.x + Constants.BLOCK_SIZE) == Constants.PA_RIGHT_X);
 	}
 	
-	public void moveDown() {
-		for(Block b : blocks) {
-			b.y += Block.SIZE;
+	private boolean hasCollidedWithBottom() {
+		return Arrays.asList(blocks).stream().anyMatch(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y);
+	}
+	*/
+
+	public boolean hasCollided(Predicate<Block> predicate) {
+		return Arrays.asList(blocks).stream().anyMatch(b -> predicate.test(b));
+	}
+	
+	public boolean hasCollidedWithBlocks(List<Block> staticBlocks, BiPredicate<Block, Block> predicate) {
+		
+		// iterate over static blocks and see if this mino has collided with one
+		return staticBlocks.stream().anyMatch(target -> {
+			return Arrays.asList(blocks).stream().anyMatch(b -> {
+				return predicate.test(target, b);
+			});
+		});
+	}
+	
+	public void moveDown(List<Block> staticBlocks) {
+		
+		if(!hasCollided(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y) 
+		&& !hasCollidedWithBlocks(staticBlocks, (target, source) ->  ((source.y + Constants.BLOCK_SIZE) == target.y) && (source.x == target.x))) {
+			for(Block b : blocks) {
+				b.y += Block.SIZE;
+			}
+			dropCounter = 0;	
+		} else {
+			bottomCollision = true;
 		}
-		dropCounter = 0;
 		
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
-	public void moveLeft() {
+	public void moveLeft(List<Block> staticBlocks) {
 		
 		// check left collision
-		
-		if(!hasCollidedWithLeft()) {		
+		if(!hasCollided(b -> b.x == Constants.PA_LEFT_X) && !hasCollidedWithBlocks(staticBlocks, (t,b) -> (b.x == t.x + Constants.BLOCK_SIZE) && b.y == t.y )) {
 			for(Block b : blocks) {
 				b.x -= Block.SIZE;
 			}
 		}
+		
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
-	public void moveRight() {
+	public void moveRight(List<Block> staticBlocks) {
 		
-		if(!hasCollidedWithRight()) {
+		if(!hasCollided(b -> (b.x + Constants.BLOCK_SIZE) == Constants.PA_RIGHT_X) && !hasCollidedWithBlocks(staticBlocks, (t,b) -> (b.x + Constants.BLOCK_SIZE == t.x) && (b.y == t.y))) {
 			for(Block b : blocks) {
 				b.x += Block.SIZE;
 			}
@@ -75,8 +105,8 @@ public abstract class Mino implements INode {
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
-	public void moveUp() {
-		rotate();
+	public void moveUp(List<Block> staticBlocks) {
+		rotate(staticBlocks);
 		kh.setDirectionPressed(DirectionEnum.NONE);
 	}
 	
@@ -87,7 +117,7 @@ public abstract class Mino implements INode {
 		}
 	}	
 
-	public void rotate() {
+	public void rotate(List<Block> staticBlocks) {
 		
 		// store current position into temp
 		copyCoordinates(blocks, tempBlocks);
@@ -125,29 +155,39 @@ public abstract class Mino implements INode {
 	}
 	
 
-	@Override
-	public void update() {
-		dropCounter++;
-		
-		switch(kh.getDirectionPressed()) {
-			case DOWN -> moveDown();
-			case LEFT -> moveLeft();
-			case RIGHT -> moveRight();
-			case UP -> moveUp();
-			default -> kh.setDirectionPressed(DirectionEnum.NONE);
-		}
-		
-		if(dropCounter >= Constants.SHAPE_DROP_INTERVAL) {
-			
-			for(Block b : blocks) {
-				b.y += Block.SIZE;
+	public void update(List<Block> staticBlocks) {
+				
+		if(active) {
+			switch(kh.getDirectionPressed()) {
+				case DOWN -> moveDown(staticBlocks);
+				case LEFT -> moveLeft(staticBlocks);
+				case RIGHT -> moveRight(staticBlocks);
+				case UP -> moveUp(staticBlocks);
+				default -> kh.setDirectionPressed(DirectionEnum.NONE);
 			}
-			
-			dropCounter = 0;
+		
+			if(bottomCollision) {
+				active = false;
+			} else {
+				dropCounter++;
+				if(dropCounter >= Constants.SHAPE_DROP_INTERVAL) {
+					
+					if(hasCollided(b -> (b.y + Constants.BLOCK_SIZE) == Constants.PA_BOTTOM_Y) 
+						    || hasCollidedWithBlocks(staticBlocks, (target, source) ->  ((source.y + Constants.BLOCK_SIZE) == target.y) && (source.x == target.x))) {
+								bottomCollision = true;
+								active = false;
+					} else {
+						for(Block b : blocks) {
+							b.y += Block.SIZE;
+						}
+											
+						dropCounter = 0;
+					}
+				}
+			}
 		}
 	}
 	
-	@Override
 	public void paint(Graphics2D g) {
 		
 		//System.out.println("Mino:paint");

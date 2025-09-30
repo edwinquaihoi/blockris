@@ -18,6 +18,9 @@ public class Constants {
 	
 	public static final int MINO_START_X = PA_LEFT_X + (PLAY_AREA_WIDTH/2) - BLOCK_SIZE;
 	public static final int MINO_START_Y = PA_TOP_Y + BLOCK_SIZE;
+	
+	public static final int NEXT_MINO_START_X = PA_RIGHT_X + 190;
+	public static final int NEXT_MINO_START_Y = PA_TOP_Y + 500;
 
 	
 }
