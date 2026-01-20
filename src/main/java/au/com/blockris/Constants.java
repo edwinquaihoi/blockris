@@ -7,7 +7,7 @@ public class Constants {
 	public static final int FPS = 60;
 	public static final int SHAPE_DROP_INTERVAL = 60;
 	
-	public static final int PLAY_AREA_WIDTH = 300;
+	public static final int PLAY_AREA_WIDTH = 360;
 	public static final int PLAY_AREA_HEIGHT = 600;
 
 	public static final int BLOCK_SIZE = 30;

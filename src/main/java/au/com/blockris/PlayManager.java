@@ -10,6 +10,8 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import au.com.blockris.shapes.BarMino;
 import au.com.blockris.shapes.Block;
@@ -81,6 +83,29 @@ public class PlayManager {
 			currMino.setXY(Constants.MINO_START_X, Constants.MINO_START_Y);
 			nextMino = randomMino();
 			nextMino.setXY(Constants.NEXT_MINO_START_X, Constants.NEXT_MINO_START_Y);
+			
+			checkAndDeleteLines();
+		}
+	}
+	
+	public void checkAndDeleteLines() {
+		
+		AtomicInteger y = new AtomicInteger(Constants.PA_TOP_Y);
+		
+		// scan each line in the play area and see how many block there are at that height
+		while(y.get() < Constants.PA_BOTTOM_Y) {
+			
+			List<Block> line = staticBlocks.stream().filter(b -> b.y == y.get()).collect(Collectors.toList());
+			
+			if(line.size() == 12) {
+				// delete the line
+				staticBlocks.removeAll(line);
+				
+				// move all lines above current y down by one block
+				staticBlocks.stream().filter(b -> b.y < y.get()).forEach(b -> b.y = b.y + Constants.BLOCK_SIZE);
+			}
+			
+			y.addAndGet(Constants.BLOCK_SIZE);
 		}
 	}
 	

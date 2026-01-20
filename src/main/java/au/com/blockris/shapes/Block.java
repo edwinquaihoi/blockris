@@ -5,9 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import au.com.blockris.commons.INode;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class Block extends Rectangle implements INode {
 
 	public static final int SIZE = 30;
